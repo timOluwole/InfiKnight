@@ -7,6 +7,8 @@
 	import flash.display.MovieClip;
 	import flash.text.TextField;
 	import Global.Game;
+	import Assets.Weapons.MeleeWeapons.MeleeWeapon;
+	import Assets.Weapons.RangedWeapons.RangedWeapon;
 	
 	public class PlayerHUDAmmo extends HUDElement {
 		
@@ -33,13 +35,22 @@
 			defaultAmmoBarWidth = ammoBar.width;
 		}
 		
-		public function updateWeaponAmmo(w:WeaponEvent):void {	
+		public function updateWeaponAmmo(w:WeaponEvent):void {
 			if (w) {
-				var currentAmmo:uint = w.weapon.getCurrentAmmo();
-				var maximumAmmo:uint = w.weapon.getMaximumAmmo();
-				
-				if (maximumAmmo > 0) {	
+				if (w.weapon is MeleeWeapon) {
+					this.visible = false;
+					
+					currentAmmoText.text = "-";//"∞";
+					maximumAmmoText.text = "-";//"∞";
+					
+					ammoBar.width = 0;					
+				} else {
 					this.visible = true;
+					
+					var weapon:RangedWeapon = RangedWeapon(w.weapon);
+					var currentAmmo:uint = weapon.getCurrentAmmo();
+					var maximumAmmo:uint = weapon.getMaximumAmmo();
+				
 					if (w.type == WeaponEvent.WEAPON_CHANGE) {
 						changeSeparators(maximumAmmo);
 					}		
@@ -48,12 +59,6 @@
 					maximumAmmoText.text = maximumAmmo.toString();
 					
 					ammoBar.width = (currentAmmo / maximumAmmo) * defaultAmmoBarWidth;
-				} else {
-					this.visible = false;
-					currentAmmoText.text = "-";//"∞";
-					maximumAmmoText.text = "-";//"∞";
-					
-					ammoBar.width = 0;
 				}
 			}
 		}

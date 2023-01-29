@@ -49,12 +49,10 @@
 			face(facingAngle);
 		}
 	
-		public function fireWeapon():void {
+		public function useWeapon():void {
 			var weapon:Weapon = getEquippedWeapon();
 			if (weapon) {
-				if (weapon.canFire) {
-					weapon.fire();
-				}
+				weapon.useWeapon();
 			}
 		}
 	

@@ -9,10 +9,11 @@
 	import flash.geom.Point;
 	import Global.Teams;
 	import Global.ParticleTypes;
+	import Interfaces.IHitter;
 	import Utilities.UtilMaths;
 	import Utilities.UtilObject;
 	
-	public class EnemyUnit extends Unit {
+	public class EnemyUnit extends Unit implements IHitter {
 
 		public var brain:EnemyBrain;
 		public var visionRange:int;
@@ -35,11 +36,25 @@
 			if (u) {
 				if (u.attackSource) {
 					var hitBox:HitBox = UtilObject.getHitBox(u.attackSource);
-								
-					var attackerPoint:Point = UtilMaths.getTransformedPoint((hitBox) ? hitBox : u.attackSource);
-					ParticleFactory.createParticleSpread(ParticleTypes.BUG_HIT, attackerPoint);					
+					
+					if (hitBox) {
+						var attackerPoint:Point = UtilMaths.getTransformedPoint(hitBox);
+						ParticleFactory.createParticleSpread(ParticleTypes.BUG_HIT, attackerPoint);		
+					}					
 				}
 			}
+		}
+	
+		public function getHitBox():HitBox {
+			var hitBox:HitBox = null;
+			
+			try {
+				hitBox = this["HitBox"];
+			} catch (ex:Error) {
+				
+			}
+		
+			return hitBox;
 		}
 	}
 	

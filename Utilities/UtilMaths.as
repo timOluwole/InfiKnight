@@ -68,7 +68,7 @@
 			var newPoint:Point = new Point(newX, newY);
 			
 			while (lastParent != Game.UNIT_LAYER && lastParent != Game.STAGE) {
-				newPoint = rotate(newPoint, lastParent.rotation);
+				newPoint = rotatePoint(newPoint, lastParent.rotation);
 				newPoint.x *= lastParent.scaleX;
 				newPoint.y *= lastParent.scaleY;
 				newPoint.x += lastParent.x;
@@ -80,7 +80,7 @@
 			return newPoint;
 		}
 	
-		public static function rotate(point:Point, rotationInDegrees:Number):Point {
+		public static function rotatePoint(point:Point, rotationInDegrees:Number):Point {
 			var newX:Number = (point.x * Math.cos(radial(rotationInDegrees))) + (-point.y * Math.sin(radial(rotationInDegrees)));
 			var newY:Number = (point.x * Math.sin(radial(rotationInDegrees))) + (point.y * Math.cos(radial(rotationInDegrees)));	
 			
