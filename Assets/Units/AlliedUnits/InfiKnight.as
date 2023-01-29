@@ -27,6 +27,9 @@
 			this.walkSpeed = new FlexiStat(300);
 			this.maximumTurnSpeed = new BasicStat(180);
 			
+			this.damage = new CompoundStat();
+			this.resistances = new CompoundStat();
+			
 			equippedWeaponIndex = 0;
 			weaponsList = new Array();
 			

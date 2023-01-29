@@ -7,6 +7,7 @@
 		public static const EXPLOSIVE = "EXPLOSIVE";
 		public static const FIRE = "FIRE";
 		public static const ICE = "ICE";
+		public static const MAGICAL = "MAGICAL";
 		public static const PHYSICAL = "PHYSICAL";
 		public static const TRUE = "ELECTRIC";
 		

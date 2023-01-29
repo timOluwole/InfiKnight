@@ -8,7 +8,7 @@
 		private var bonusMultiplier:Number;
 		private var totalmultiplier:Number;
 		
-		public function FlexiStat(base:Number, minimum:Number = 0, maximum:Number = 0) {
+		public function FlexiStat(base:Number = 0, minimum:Number = 0, maximum:Number = 0) {
 			super(base, minimum, maximum);
 			this.base = base;
 			this.bonus = 0;

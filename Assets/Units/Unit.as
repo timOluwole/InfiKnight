@@ -18,7 +18,7 @@
 	import Interfaces.ITeam;
 	import Utilities.UtilFrame;
 	import Utilities.UtilObject;
-
+	import Utilities.UtilMaths;
 	
 	public class Unit extends Asset implements ITeam, IHurtable {
 
@@ -27,11 +27,14 @@
 		protected var walkSpeed:FlexiStat;
 		protected var maximumTurnSpeed:BasicStat;
 		
-		private var team:String;
-		private var health:BasicStat;
+		protected var team:String;
+		protected var health:BasicStat;
+		protected var damage:CompoundStat;
+		protected var resistances:CompoundStat;
 		
 		public function Unit(team:String) {
 			this.team = team;
+			
 			Game.STAGE.addEventListener(ProjectileEvent.PROJECTILE_HIT_CHECK, checkProjectileHit);
 			Game.STAGE.addEventListener(UnitEvent.UNIT_ATTACK_HIT_CHECK, checkAttackHit);
 			Game.STAGE.addEventListener(WeaponEvent.WEAPON_HIT_CHECK, checkWeaponHit);
@@ -139,6 +142,14 @@
 			this.move(movementAngle, walkSpeed.getStat());
 		}
 	
+		public function getDamageStat():CompoundStat {
+			return this.damage;
+		}
+	
+		public function getResistanceStat():CompoundStat {
+			return this.resistances;
+		}
+	
 	
 		// listener functions
 	
@@ -218,7 +229,11 @@
 		private function attackHit(a:AttackEvent):void {
 			if (a) {
 				if (a.unitHit) {	// ensuring unit has not disappeared
-					a.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, a.unitHit, -a.attack.getDamage(this, a.unitHit)));
+					
+					var damageDealt:uint = UtilMaths.calculateDamage(a.attack.getDamage(), a.attack.getDamageType(), this, a.unitHit);	
+					damageDealt = UtilMaths.scatter10Percent(damageDealt);	
+					
+					a.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, a.unitHit, -damageDealt));
 					this.dispatchEvent(new AttackEvent(AttackEvent.ATTACK_HIT_COMPLETE, this));
 				}
 			}

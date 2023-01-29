@@ -30,7 +30,7 @@
 				
 				Game.UNIT_LAYER.addChild(new GunShotParticle(firingPoint.x, firingPoint.y, rotationDegree));	
 				
-				shell1 = new ShotgunShell(this.getTeam(), UtilMaths.scatter10Percent(damage));
+				shell1 = new ShotgunShell(this.damage, this.wielder, this);
 				shell1.x = firingPoint.x;
 				shell1.y = firingPoint.y;				
 				shell1.rotation = rotationDegree;
@@ -44,7 +44,7 @@
 					
 					Game.UNIT_LAYER.addChild(new GunShotParticle(firingPoint.x, firingPoint.y, rotationDegree));	
 				
-					shell2 = new ShotgunShell(this..getTeam(), UtilMaths.scatter10Percent(damage));
+					shell2 = new ShotgunShell(this.damage, this.wielder, this);
 					shell2.x = firingPoint.x;
 					shell2.y = firingPoint.y;
 					shell2.rotation = rotationDegree;

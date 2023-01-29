@@ -1,13 +1,15 @@
 ﻿package Assets.Projectiles {
 	
 	import Assets.Particles.HitParticles.BugHitParticle;
+	import Assets.Units.Unit;
+	import Assets.Weapons.Weapon;
 	import Events.ProjectileEvent;
 	import Global.Game;
 	
 	public class ShotgunShell extends Bullet {
 
-		public function ShotgunShell(sourceTeam:String, damage:int) {
-			super(sourceTeam, damage, 1200, 2);
+		public function ShotgunShell(damage:int, sourceUnit:Unit, sourceWeapon:Weapon) {
+			super(damage, 1200, 2, sourceUnit, sourceWeapon);
 			this.addEventListener(ProjectileEvent.PROJECTILE_HIT_COMPLETE, projectileHitComplete);
 		}
 	

@@ -27,7 +27,7 @@
 				
 				Game.UNIT_LAYER.addChild(new GunShotParticle(firingPoint.x, firingPoint.y, rotationDegree));
 				
-				bullet = new PistolBullet(this.getTeam(), UtilMaths.scatter10Percent(damage));
+				bullet = new PistolBullet(this.damage, this.wielder, this);
 				bullet.x = firingPoint.x;
 				bullet.y = firingPoint.y;
 				bullet.rotation = rotationDegree;

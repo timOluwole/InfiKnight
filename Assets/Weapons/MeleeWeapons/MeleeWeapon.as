@@ -35,10 +35,12 @@
 
 					if (hitBox) {
 						hitBox.addUnitToHitTargets(w.unitHit);
-					}
-					var healthCnange:uint = -UtilMaths.scatter10Percent(damage);
-					w.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_GET_HIT, w.unitHit, healthCnange, this, this.damageType));
-					w.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, w.unitHit, healthCnange));
+					}	
+					var damageDealt:uint = UtilMaths.calculateDamage(this.damage, this.damageType, this.wielder, w.unitHit);	
+					damageDealt = UtilMaths.scatter10Percent(damageDealt);		
+				
+					w.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_GET_HIT, w.unitHit, -damageDealt, this, this.damageType));
+					w.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, w.unitHit, -damageDealt));
 					this.dispatchEvent(new WeaponEvent(WeaponEvent.WEAPON_HIT_COMPLETE, this));
 				}
 			}
