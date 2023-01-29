@@ -5,6 +5,10 @@
 	import Assets.Containers.HurtBox;
 	import Assets.Units.Unit;
 	import flash.utils.*;
+	import Global.Teams;
+	import Interfaces.ITeam;
+	import Interfaces.IHurtable;
+	import Interfaces.IHitter;
 	
 	public class UtilObject {
 
@@ -12,7 +16,7 @@
 			return getDefinitionByName(getQualifiedClassName(obj));
 		}
 	
-		public static function getHitBox(obj:Asset):HitBox {
+		public static function getHitBox(obj:IHitter):HitBox {
 			var hitBox:HitBox = null;
 			
 			try {
@@ -24,7 +28,7 @@
 			return hitBox;
 		}
 	
-		public static function getHurtBox(obj:Asset):HurtBox {
+		public static function getHurtBox(obj:IHurtable):HurtBox {
 			var hurtBox:HurtBox = null;
 			
 			try {
@@ -36,7 +40,7 @@
 			return hurtBox;
 		}
 	
-		public static function attackMakesContact(attacker:Asset, attacked:Unit):Boolean {
+		public static function attackMakesContact(attacker:IHitter, attacked:IHurtable):Boolean {
 			var hitBox:HitBox = getHitBox(attacker);
 			var hurtBox:HurtBox = getHurtBox(attacked);
 			
@@ -45,6 +49,10 @@
 			}
 		
 			return false;
+		}
+	
+		public static function canAttack(attacker:ITeam, target:ITeam):Boolean {
+			return (attacker.getTeam() != target.getTeam() && attacker.getTeam() != Teams.NONE);
 		}
 	
 	}

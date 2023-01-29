@@ -114,7 +114,7 @@
 	
 		private function catchMouseInputs(T:TimerEvent):void {
 			if (inputM) {
-				knight.fireWeapon();
+				knight.useWeapon();
 			}
 		}
 	

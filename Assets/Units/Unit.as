@@ -1,7 +1,9 @@
 ﻿package Assets.Units {
 	
 	import Assets.Asset;
+	import Assets.Containers.HitBox;
 	import Assets.Containers.HurtBox;
+	import Assets.Weapons.MeleeWeapons.MeleeWeapon;
 	import Data.AttackData.AttackData;
 	import Data.AttackData.Attacks;
 	import Data.Stats.*;
@@ -11,12 +13,14 @@
 	import Global.Directions;
 	import Global.Frames;
 	import Global.Game;
+	import Interfaces.IHitter;
+	import Interfaces.IHurtable;
+	import Interfaces.ITeam;
 	import Utilities.UtilFrame;
 	import Utilities.UtilObject;
-	import Assets.Containers.HitBox;
 
 	
-	public class Unit extends Asset {
+	public class Unit extends Asset implements ITeam, IHurtable {
 
 		private var attacks:Attacks;
 		
@@ -59,6 +63,18 @@
 	
 		public function getTeam():String {
 			return team;
+		}
+	
+		public function getHurtBox():HurtBox {
+			var hurtBox:HurtBox = null;
+			
+			try {
+				hurtBox = this["HurtBox"];
+			} catch (ex:Error) {
+				
+			}
+		
+			return hurtBox;
 		}
 	
 		// setters
@@ -130,7 +146,7 @@
 			if (p) {
 				if (p.projectile && this.isAlive()) {
 					if (UtilObject.attackMakesContact(p.projectile, this)) {
-						if (p.projectile.getSourceTeam() != this.getTeam()) {
+						if (UtilObject.canAttack(p.projectile, this)) {
 							p.projectile.dispatchEvent(new ProjectileEvent(ProjectileEvent.PROJECTILE_HIT, p.projectile, this));
 						}
 					}
@@ -141,8 +157,8 @@
 		private function checkAttackHit(u:UnitEvent):void {
 			if (u) {
 				if (u.unit && this.isAlive()) {
-					if (UtilObject.attackMakesContact(u.unit, this)) {
-						if (u.unit.getTeam() != this.getTeam()) {
+					if (UtilObject.attackMakesContact(IHitter(u.unit), this)) {
+						if (UtilObject.canAttack(u.unit, this)) {
 							var attackName = UtilFrame.getAttackName(u.unit.currentLabel);
 							var attack:AttackData = u.unit.getAttacks().getAttack(attackName);
 							u.unit.dispatchEvent(new AttackEvent(AttackEvent.ATTACK_HIT, this, attack));
@@ -154,10 +170,12 @@
 	
 		private function checkWeaponHit(w:WeaponEvent):void {
 			if (w) {
-				if (w.weapon && this.isAlive()) {
-					if (UtilObject.attackMakesContact(w.weapon, this)) {
-						if (w.weapon.getWielderTeam() != this.getTeam() && !w.weapon.hasAlreadyHitUnit(this)) {
-							w.weapon.dispatchEvent(new WeaponEvent(WeaponEvent.WEAPON_HIT, w.weapon, this));
+				var weapon:MeleeWeapon = MeleeWeapon(w.weapon);
+				
+				if (weapon && this.isAlive()) {
+					if (UtilObject.attackMakesContact(weapon, this)) {
+						if (UtilObject.canAttack(weapon, this) && !weapon.hasAlreadyHitUnit(this)) {
+							weapon.dispatchEvent(new WeaponEvent(WeaponEvent.WEAPON_HIT, weapon, this));
 						}
 					}
 				}
@@ -189,7 +207,7 @@
 	
 		private function checkForAttack():void {
 			if (UtilFrame.isAttackFrame(this.currentLabel)) {
-				var hitBox:MovieClip = UtilObject.getHitBox(this);
+				var hitBox:MovieClip = UtilObject.getHitBox(IHitter(this));
 				
 				if (hitBox) {
 					this.dispatchEvent(new UnitEvent(UnitEvent.UNIT_ATTACK_HIT_CHECK, this));

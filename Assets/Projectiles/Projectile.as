@@ -1,14 +1,16 @@
 ﻿package Assets.Projectiles {
 	
 	import Assets.Asset;
+	import Assets.Containers.HitBox;
 	import Events.ProjectileEvent;
 	import Events.UnitEvent;
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import Global.Game;
+	import Interfaces.IHitter;
+	import Interfaces.ITeam;	
 	
-	
-	public class Projectile extends Asset {
+	public class Projectile extends Asset implements ITeam, IHitter {
 
 		protected var sourceTeam:String;
 		protected var damage:uint;
@@ -64,7 +66,7 @@
 			return speed / Game.STAGE.frameRate;
 		}
 	
-		public function getSourceTeam() {
+		public function getTeam():String {
 			return this.sourceTeam;
 		}
 	
@@ -72,7 +74,15 @@
 			return this.damage;
 		}
 	
-		public function getHitBox() {
+		public function getHitBox():HitBox {
+			var hitBox:HitBox = null;
+			
+			try {
+				hitBox = this["HitBox"];
+			} catch (ex:Error) {
+				
+			}
+		
 			return hitBox;
 		}
 

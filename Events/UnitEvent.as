@@ -4,6 +4,7 @@
 	import Assets.Units.Unit;
 	import flash.events.Event;
 	import Global.DamageTypes;
+	import Interfaces.IHitter;
 
 	public class UnitEvent extends Event {
 		
@@ -17,10 +18,10 @@
 
 		public var unit:Unit; 
 		public var healthChange:int; 
-		public var attackSource:Asset; 
+		public var attackSource:IHitter; 
 		public var damageType:String; 
 		
-		public function UnitEvent( type:String, unit:Unit, healthChange:int = 0, attackSource:Asset = null, damageType:String = DamageTypes.TRUE, bubbles:Boolean = true, cancelable:Boolean = false) {
+		public function UnitEvent( type:String, unit:Unit, healthChange:int = 0, attackSource:IHitter = null, damageType:String = DamageTypes.TRUE, bubbles:Boolean = true, cancelable:Boolean = false) {
 			super( type, bubbles, cancelable );
 			this.unit = unit;
 			this.healthChange = healthChange;
