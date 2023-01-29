@@ -102,6 +102,23 @@
 		public static function minutes(numberOfMinutes:uint):uint {
 			return numberOfMinutes * 60000;
 		}
+	
+		public static function percent(percentValue:Number):Number {
+			return percentValue * 0.01;
+		}
+	
+		public static function calculateDamage(damage:uint, damageType:String, attacker:Unit, target:Unit):uint {
+			return Math.round(damage * attacker.getDamageStat().calculateScaling(damageType) / target.getResistanceStat().calculateScaling(damageType)); 
+		}
+	
+		public static function randomMinMax(min:Number, max:Number):Number {
+			var range:Number = max - min;
+			return (min + Math.round(Math.random() * range));
+		}
+	
+		public static function randomMinRange(min:Number, range:Number):Number {
+			return (min + Math.round(Math.random() * range));
+		}
 
 	}
 	

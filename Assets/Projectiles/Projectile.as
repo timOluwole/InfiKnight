@@ -2,6 +2,8 @@
 	
 	import Assets.Asset;
 	import Assets.Containers.HitBox;
+	import Assets.Units.Unit;
+	import Assets.Weapons.Weapon;
 	import Events.ProjectileEvent;
 	import Events.UnitEvent;
 	import flash.display.MovieClip;
@@ -9,27 +11,28 @@
 	import Global.Game;
 	import Interfaces.IHitter;
 	import Interfaces.ITeam;	
+	import Utilities.UtilMaths;
 	
 	public class Projectile extends Asset implements ITeam, IHitter {
 
-		protected var sourceTeam:String;
 		protected var damage:uint;
 		protected var damageType:String;
 		protected var speed:uint;
 		protected var lifeTime:uint;
 		protected var maximumLifeTime:uint;
-		protected var hitBox:MovieClip;
+		protected var sourceUnit:Unit;
+		protected var sourceWeapon:Weapon;
 		
-		public function Projectile(sourceTeam:String, damage:uint, damageType:String, speed:uint, maximumLifeTimeSeconds:uint) {				
+		public function Projectile(damage:uint, damageType:String, speed:uint, maximumLifeTimeSeconds:uint, sourceUnit:Unit, sourceWeapon:Weapon = null) {				
 			Game.UNIT_LAYER.addChild(this);
 			
-			this.sourceTeam = sourceTeam;
 			this.damage = damage;
 			this.damageType = damageType;
 			this.speed = speed;
 			this.maximumLifeTime = maximumLifeTimeSeconds * Game.STAGE.frameRate;
 			this.lifeTime = 0;
-			this.hitBox = this["HitBox"];
+			this.sourceUnit = sourceUnit;
+			this.sourceWeapon = sourceWeapon;
 			
 			this.addListener(Event.ENTER_FRAME, inFlight);
 			this.addListener(ProjectileEvent.PROJECTILE_HIT, projectileHit);
@@ -54,9 +57,11 @@
 		private function projectileHit(p:ProjectileEvent):void {
 			if (p) {
 				if (p.unitHit) {	// ensuring unit has not disappeared
-					var healthChange:uint = -p.projectile.getDamage();
-					p.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_GET_HIT, p.unitHit, healthChange, this, this.damageType));
-					p.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, p.unitHit, healthChange));
+					var damageDealt:uint = UtilMaths.calculateDamage(this.damage, this.damageType, this.sourceUnit, p.unitHit);	
+					damageDealt = UtilMaths.scatter10Percent(damageDealt);	
+					
+					p.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_GET_HIT, p.unitHit, -damageDealt, this, this.damageType));
+					p.unitHit.dispatchEvent(new UnitEvent(UnitEvent.UNIT_TAKE_DAMAGE, p.unitHit, -damageDealt));
 					this.dispatchEvent(new ProjectileEvent(ProjectileEvent.PROJECTILE_HIT_COMPLETE, this));
 				}
 			}
@@ -67,7 +72,7 @@
 		}
 	
 		public function getTeam():String {
-			return this.sourceTeam;
+			return this.sourceUnit.getTeam();
 		}
 	
 		public function getDamage() {

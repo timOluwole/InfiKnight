@@ -4,12 +4,14 @@
 	import Events.ProjectileEvent;
 	import Factories.ParticleFactory;
 	import Global.Game;
+	import Assets.Units.Unit;
+	import Assets.Weapons.Weapon;
 	
 	
 	public class PistolBullet extends Bullet {
 
-		public function PistolBullet(sourceTeam:String, damage:int) {
-			super(sourceTeam, damage, 800, 3);
+		public function PistolBullet(damage:int, sourceUnit:Unit, sourceWeapon:Weapon) {
+			super(damage, 800, 3, sourceUnit, sourceWeapon);
 			this.addEventListener(ProjectileEvent.PROJECTILE_HIT_COMPLETE, projectileHitComplete);
 		}		
 	

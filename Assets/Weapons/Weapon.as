@@ -19,6 +19,7 @@
 		
 		public function Weapon(weaponName:String, damageType:String) {
 			this.weaponName = weaponName;
+			this.damageType = damageType;
 			
 			Game.STAGE.addEventListener(WeaponEvent.WEAPON_ACQUIRE, weaponAcquired);
 			

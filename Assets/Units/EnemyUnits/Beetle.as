@@ -17,6 +17,9 @@
 			this.periphery = 45;
 			this.setAttacks(new BeetleAttacks());
 			
+			this.damage = new CompoundStat();
+			this.resistances = new CompoundStat();
+			
 			this.addListener(UnitEvent.UNIT_DIE, die);
 		}
 	
